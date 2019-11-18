@@ -30,9 +30,9 @@ def dice(
     if threshold is not None:
         outputs = (outputs > threshold).float()
 
-    intersection = torch.sum(targets * outputs)
-    union = torch.sum(targets) + torch.sum(outputs)
-    dice = 2 * intersection / (union + eps)
+    intersection = (targets * outputs).mean(dim=2).mean(dim=2)
+    union = targets.mean(dim=2).mean(dim=2) + outputs.mean(dim=2).mean(dim=2)
+    dice = ((2 * intersection + eps) / (union + eps)).mean()
 
     return dice
 
